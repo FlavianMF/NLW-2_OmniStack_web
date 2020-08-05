@@ -2,31 +2,51 @@ import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+  avatar: string,
+  bio: string,
+  cost: number,
+  id: number,
+  name: string,
+  subject: string,
+  whatsapp: string
+}
+
+interface TeacherItemPros {
+  teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemPros> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('/connections', {
+      user_id: teacher.id
+    })
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img src="https://instagram.fsod2-1.fna.fbcdn.net/v/t51.2885-19/s150x150/101790961_1158485497839226_4769051524208787456_n.jpg?_nc_ht=instagram.fsod2-1.fna.fbcdn.net&_nc_ohc=22hximV3k8AAX_7tDRx&oh=f3eee5395420eab6c5db4ecba084e6b7&oe=5F50F090" alt="Flavian" />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Flavian Melquiades</strong>
-          <span>Robótica</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Robô Robô Robô
-            <br /> <br />
-            Troféu Troféu Troféu
-          </p>
+      <p>{teacher.bio}</p>
       <footer>
         <p>
           Preço/Hora:
-              <strong>R$ 100,00</strong>
+              <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a target="_blank"
+          onClick={createNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
           <img src={whatsappIcon} alt="Contato" />
               Entrar em contato
-            </button>
+        </a>
       </footer>
     </article>
   )
